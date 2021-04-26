@@ -1,0 +1,12 @@
+D:\dsadadas\WebApp2\Service\bin\Debug\netcoreapp3.1\Model.dll
+D:\dsadadas\WebApp2\Service\obj\Debug\netcoreapp3.1\Service.csprojAssemblyReference.cache
+D:\dsadadas\WebApp2\Service\obj\Debug\netcoreapp3.1\Service.AssemblyInfoInputs.cache
+D:\dsadadas\WebApp2\Service\obj\Debug\netcoreapp3.1\Service.AssemblyInfo.cs
+D:\dsadadas\WebApp2\Service\bin\Debug\netcoreapp3.1\Service.deps.json
+D:\dsadadas\WebApp2\Service\bin\Debug\netcoreapp3.1\Service.dll
+D:\dsadadas\WebApp2\Service\bin\Debug\netcoreapp3.1\Service.pdb
+D:\dsadadas\WebApp2\Service\bin\Debug\netcoreapp3.1\Model.pdb
+D:\dsadadas\WebApp2\Service\obj\Debug\netcoreapp3.1\Service.csproj.CoreCompileInputs.cache
+D:\dsadadas\WebApp2\Service\obj\Debug\netcoreapp3.1\Service.csproj.CopyComplete
+D:\dsadadas\WebApp2\Service\obj\Debug\netcoreapp3.1\Service.dll
+D:\dsadadas\WebApp2\Service\obj\Debug\netcoreapp3.1\Service.pdb

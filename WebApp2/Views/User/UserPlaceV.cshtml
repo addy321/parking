@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "UserList";
+}
+@*<h1>@ViewData["Title"]</h1>*@
+
+
+<div class="col-9">
+    <form id="ctl01">
+        <div class="mt-2">
+            <h2>用户管理</h2>
+            <hr>
+        </div>
+        <div class="form-inline mt-2">
+            <select name="ctl00$ContentPlaceHolder1$cxlb" id="queryType" class="form-control">
+                <option value="">请选择查询类别</option>
+                <option value="yhzh">账号</option>
+                <option value="yhxm">姓名</option>
+            </select>
+
+            <input name="ctl00$ContentPlaceHolder1$cxnr" type="text" id="queryText" class="form-control ml-1" placeholder="请输入查询内容">
+            <input type="button" value="查询" id="queryUserList" onclick="userList()" class="btn btn-primary ml-1">
+            <a href="/User/SaveUser" class="btn btn-primary ml-1">新增用户</a>
+        </div>
+        <div class="mt-2">
+            <div>
+                <table class="table table-striped" cellspacing="0" rules="all" border="1" id="ContentPlaceHolder1_GridView1" style="border-collapse:collapse;border-color:#efefef;">
+                    <thead>
+                        <tr>
+                            <th scope="col">账号</th>
+                            <th scope="col">姓名</th>
+                            <th scope="col">密码</th>
+                            <th scope="col">类别</th>
+                            <th scope="col">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    userList()
+    function userList() {
+        var queryText = $("#queryText").val().trim()
+        var queryType = $("#queryType").val().trim()
+
+        var data = {}
+        if (queryType != "") {
+            data["queryType"] = queryType
+        }
+        if (queryText != "") {
+            data["queryText"] = queryText
+        }
+
+        $.ajax({
+            type: 'get',
+            url: "/User/GetUserList",
+            data: data,
+            datatype: 'json',
+            success: function (res) {
+                var htmltext = ''
+                var loginUser = localStorage.getItem("loginUser")
+                res.forEach(x => {
+                    var bc = `<a id="ContentPlaceHolder1_GridView1_HyperLink1_0" class="btn btn-info btn-sm" href="/User/SaveUser?accout=${x.yhzh}">编辑</a>
+ <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick="if(confirm('确定删除用户信息？')){window.location.href='/User/DelSysUser?id=${x.yhzh}';}">删除</a> </td>`
+                    htmltext += ` <tr><td>${x.yhzh}</td> <td>${x.yhxm}</td> <td>******</td> <td>${x.yhlb == 1 ? "管理员" : "车主"}</td> <td>${loginUser == "admin" ? bc:""}</tr>`
+                })
+                $("tbody").html(htmltext)
+                console.log(res)
+            }, error: function (err) {
+                console.log(err)
+                alert("请求异常")
+            }
+        });
+    }
+    
+</script>

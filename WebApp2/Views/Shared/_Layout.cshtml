@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebApp2</title>
+    <link rel="stylesheet" href="/lib/css/bootstrap.css" />
+    <link rel="stylesheet" href="/lib/css/site.css" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+    <script src="~/lib/js/jquery-3.4.1.min.js"></script>
+    <script src="~/lib/js/bootstrap.js"></script>
+
+    <script src="https://cdn.bootcss.com/moment.js/2.24.0/moment-with-locales.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color: #007bff !important;">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="navbar-brand" style="color:aliceblue;">小区停车管理系统</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" style="float:right;">
+                    <li><a style="color:aliceblue;">欢迎 <span id="loginuser"></span> 登录</a></li>
+                    <a asp-area="" asp-controller="User" asp-action="Login" class="navbar-brand" style="color:aliceblue;">退出</a>
+                    @*<li>@Html.ActionLink("联系方式", "Contact", "Home", new { @class = "my-zt" }, new { @style = "color:aliceblue;" })</li>*@
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar" style="background-color: #FFFFFF;">
+                @*<div class="list-group">
+                <a href="#" class="list-group-item active">
+                    首页
+                </a>
+                <a href="#" class="list-group-item">用户管理</a>
+                <a href="#" class="list-group-item">车位管理</a>
+                <a href="#" class="list-group-item">停车管理</a>
+                <a href="#" class="list-group-item">停车查询</a>
+            </div>*@
+                <ul class="nav nav-sidebar">
+                    <li><a asp-controller="Home" asp-action="Index">首页 <span class="sr-only">首页</span></a></li>
+                    <li><a asp-controller="User" asp-action="UserPlaceV">用户管理</a></li>
+                    <li><a asp-controller="Cwxx" asp-action="CwxxPlaceV">车位管理</a></li>
+                    <li><a asp-controller="Tcxx" asp-action="TcxxPlaceV">停车管理</a></li>
+                    <li><a asp-controller="Tcxx" asp-action="TcxxList">停车查询</a></li>
+                    <li><a asp-controller="Tcxx" asp-action="ZscwList">专属车位</a></li>
+                </ul>
+            </div>
+            <div class="view-rould ">
+                @RenderBody()
+                <hr />
+                <footer>
+                    <p>&copy; @DateTime.Now.Year - 小区停车管理系统</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>*@
+    
+    @*<footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - WebApp2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>*@
+    <script>
+        var loginUser = localStorage.getItem("loginUser")
+        $("#loginuser").text(loginUser)
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "UserList";
+}
+@*<h1>@ViewData["Title"]</h1>*@
+
+
+<div class="col-9">
+    <form id="ctl01">
+
+        <div class="mt-2">
+            <h2>车位管理</h2>
+            <hr>
+        </div>
+        <div class="form-inline mt-2">
+            <select id="queryType" class="form-control">
+                <option value="">请选择查询类别</option>
+                <option value="b.cwmc">车位</option>
+                <option value="b.cwzt">状态</option>
+                <option value="a.clbm">车牌号</option>
+            </select>
+
+            <input name="ctl00$ContentPlaceHolder1$cxnr" type="text" id="queryText" class="form-control ml-1" placeholder="请输入查询内容">
+            <input type="button" value="查询" id="queryUserList" onclick="userList()" class="btn btn-primary ml-1">
+        </div>
+        <div class="mt-2">
+            <div>
+                <table class="table table-striped" cellspacing="0" rules="all" border="1" id="ContentPlaceHolder1_GridView1" style="border-collapse:collapse;border-color:#efefef;">
+                    <thead>
+                        <tr>
+                            <th scope="col">车位名称</th>
+                            <th scope="col">每小时费用</th>
+                            <th scope="col">车牌号</th>
+                            <th scope="col">车型</th>
+                            <th scope="col">停车开始时间</th>
+                            <th scope="col">停车结束时间</th>
+                            <th scope="col">停车费</th>
+                            @*<th scope="col">&nbsp;</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    userList()
+    function userList() {
+        var queryText = $("#queryText").val().trim()
+        var queryType = $("#queryType").val().trim()
+
+        var data = {}
+        if (queryType != "") {
+            data["queryType"] = queryType
+        }
+        if (queryText != "") {
+            data["queryText"] = queryText
+        }
+
+        $.ajax({
+            type: 'get',
+            url: "/Tcxx/TcList",
+            data: data,
+            datatype: 'json',
+            success: function (res) {
+                var htmltext = ''
+                res.forEach(x => {
+                    htmltext += `<tr><td>${x.cwmc}</td> <td>${x.mxsfy}</td> <td>${x.clbm}</td> <td>${x.clxh}</td><td>${x.tckssj}</td><td>${x.tcjssj == null ? "" : x.tcjssj}</td><td>${x.tcfy}</td></tr>`
+                })
+                $("tbody").html(htmltext)
+            }, error: function (err) {
+                console.log(err)
+                alert("请求异常")
+            }
+        });
+    }
+
+</script>

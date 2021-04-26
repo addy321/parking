@@ -1,0 +1,130 @@
+﻿@{
+    ViewData["Title"] = "AddUser";
+}
+
+
+<form id="ctl01">
+    <div class="mt-2">
+        <h2>新增用户</h2>
+        <hr>
+    </div>
+    <div class="form-group">
+        <input name="yhzhId" type="hidden" class="form-control" value="@Model.yhzh" placeholder="请输入账号">
+    </div>
+    <div class="form-group">
+        <span id="ContentPlaceHolder1_Label1" for="yhzh">账号</span>
+        <input name="yhzh" type="text" class="form-control" value="@Model.yhzh" placeholder="请输入账号">
+        <span id="yhzhtisi" style="color:Red;display:none;">账号不能为空</span>
+    </div>
+    <div class="form-group">
+        <span id="ContentPlaceHolder1_Label2" for="yhxm">姓名</span>
+        <input name="yhxm" type="text" class="form-control" value="@Model.yhxm" placeholder="请输入姓名">
+        <span id="yhxmtishi" style="color:Red;display:none;">姓名不能为空</span>
+    </div>
+    <div class="form-group">
+        <span id="ContentPlaceHolder1_Label3" for="yhmm">密码</span>
+        <input name="yhmm" type="text" class="form-control" value="@Model.yhmm" placeholder="请输入密码">
+        <span id="yhmmtishi" style="color:Red;display:none;">密码不能为空</span>
+    </div>
+    <div class="form-group">
+        <span for="yhlb">用户类别</span>
+        <select name="yhlb" id="yhlb" class="form-control" value="@Model.yhlb">
+            <option value="">请选择用户类别</option>
+            @if (Model.yhlb == 1)
+            {
+                <option value="1" selected="selected">管理员</option>
+                <option value="2">车主</option>
+            }
+            else if (Model.yhlb == 2)
+            {
+                <option value="1">管理员</option>
+                <option value="2" selected="selected">车主</option>
+            }
+            else
+            {
+                <option value="1">管理员</option>
+                <option value="2">车主</option>
+            }
+        </select>
+        <span id="yhlbtishi" style="color:Red;display:none;">用户类别不能为空</span>
+    </div>
+    <input type="button" name="ctl00$ContentPlaceHolder1$Button1" value="保存" onclick="WebForm_OnSubmit()" id="ContentPlaceHolder1_Button1" class="btn btn-primary">
+    <a href="/User/UserPlaceV" class="btn btn-light ml-1">返回用户管理</a>
+
+
+    <script type="text/javascript">
+        function WebForm_OnSubmit() {
+            var yhzh = $("input[name=yhzh]").val().trim()
+            var yhxm = $("input[name=yhxm]").val().trim()
+            var yhmm = $("input[name=yhmm]").val().trim()
+            var yhlb = $("#yhlb").val();
+            if (yhzh == "") {
+                $("#yhzhtisi").css('display', 'block')
+                return
+            } else {
+                $("#yhzhtisi").css('display', 'none')
+            }
+            if (yhxm == "") {
+                $("#yhxmtishi").css('display', 'block')
+                return
+            } else {
+                $("#yhxmtishi").css('display', 'none')
+            }
+            if (yhmm == "") {
+                $("#yhmmtishi").css('display', 'block')
+                return
+            } else {
+                $("#yhmmtishi").css('display', 'none')
+            }
+            if (yhlb == "") {
+                $("#yhlbtishi").css('display', 'block')
+                return
+            } else {
+                $("#yhlbtishi").css('display', 'none')
+            }
+
+            var yhzhId = $("input[name=yhzhId]").val()
+            if (yhzhId == "") {
+                $.ajax({
+                    type: 'post',
+                    url: "/User/AddSysUser",
+                    data: { "yhzh": yhzh, "yhxm": yhxm, "yhmm": yhmm, "yhlb": yhlb },
+                    datatype: 'json',
+                    success: function (res) {
+                        if (res == 1) {
+                            alert("操作成功")
+                            $("input[name=yhzh]").val("")
+                            $("input[name=yhxm]").val("")
+                            $("input[name=yhmm]").val("")
+                            $("#yhlb").val("");
+                        }
+                    }, error: function (err) {
+                        console.log(err)
+                        alert("请求异常")
+                    }
+                });
+
+            } else {
+                $.ajax({
+                    type: 'post',
+                    url: "/User/UpdateTeacher",
+                    data: { "yhzh": yhzh, "yhxm": yhxm, "yhmm": yhmm, "yhlb": yhlb },
+                    datatype: 'json',
+                    success: function (res) {
+                        console.log(res)
+                        if (res == 1) {
+                            alert("操作成功")
+                        }
+                    }, error: function (err) {
+                        console.log(err)
+                        alert("请求异常")
+                    }
+                });
+            }
+
+           
+            
+        }
+    </script>
+
+</form>

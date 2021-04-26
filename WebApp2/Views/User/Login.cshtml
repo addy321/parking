@@ -1,0 +1,55 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link rel="stylesheet" href="~/css/Login.css" />
+</head>
+<body>
+    <div class="login-wrap col-xs-6 col-md-3">
+        <h2>登录</h2>
+        <img src="./image/login-left.jpg" width="100%"/>
+        <div class="form">
+            <input type="text" placeholder="用户名" name="un" />
+            <input type="password" placeholder="密码" name="pw" />
+            <button onclick="login()">登录</button>
+            @*<a href="#"> <p> 没有账号？点击注册 </p></a>*@
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="~/lib/js/jquery-3.4.1.js"></script>
+    <script>
+        function login() {
+            var account = $("input[name=un]").val().trim()
+            var pass = $("input[name=pw]").val().trim()
+            if (account != "" && pass != "") {
+                $.ajax({
+                    type: 'post',
+                    url: "/User/LoginAction",
+                    data: { "account": account, "password": pass },
+                    datatype: 'json',
+                    success: function (res) {
+                        console.log(res)
+                        if (res != null) {
+                            localStorage.setItem("loginUser", account)
+                            window.location.href = '/Home/Index';
+                        } else {
+                            alert("登录失败，请输入正确的账号密码")
+                        }
+                    }, error: function (err) {
+                        console.log(err)
+                        alert("请求异常")
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

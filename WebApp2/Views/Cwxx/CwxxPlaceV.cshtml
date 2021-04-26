@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "UserList";
+}
+@*<h1>@ViewData["Title"]</h1>*@
+
+
+<div class="col-9">
+    <form id="ctl01">
+
+        <div class="mt-2">
+            <h2>车位管理</h2>
+            <hr>
+        </div>
+        <div class="form-inline mt-2">
+            <select name="ctl00$ContentPlaceHolder1$cxlb" id="queryType" class="form-control">
+                <option value="">请选择查询类别</option>
+                <option value="cwmc">车位</option>
+                <option value="cwzt">状态</option>
+            </select>
+
+            <input name="ctl00$ContentPlaceHolder1$cxnr" type="text" id="queryText" class="form-control ml-1" placeholder="请输入查询内容">
+            <input type="button" value="查询" id="queryUserList" onclick="userList()" class="btn btn-primary ml-1">
+            <a href="/Cwxx/ShowSave" class="btn btn-primary ml-1">新增车位</a>
+        </div>
+        <div class="mt-2">
+            <div>
+                <table class="table table-striped" cellspacing="0" rules="all" border="1" id="ContentPlaceHolder1_GridView1" style="border-collapse:collapse;border-color:#efefef;">
+                    <thead>
+                        <tr>
+                            <th scope="col">车位号</th>
+                            <th scope="col">车位名称</th>
+                            <th scope="col">车位价格</th>
+                            <th scope="col">车位状态</th>
+                            <th scope="col">专属车主</th>
+                            <th scope="col">专属价格</th>
+                            <th scope="col">专属过期时间</th>
+                            <th scope="col">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    userList()
+    function userList() {
+        var queryText = $("#queryText").val().trim()
+        var queryType = $("#queryType").val().trim()
+
+        var data = {}
+        if (queryType != "") {
+            data["queryType"] = queryType
+        }
+        if (queryText != "") {
+            data["queryText"] = queryText
+        }
+
+        $.ajax({
+            type: 'get',
+            url: "/Cwxx/GetDataList",
+            data: data,
+            datatype: 'json',
+            success: function (res) {
+                if (res.res) {
+                    alert(res.res)
+                }
+                var loginUser = localStorage.getItem("loginUser")
+                var htmltext = ''
+                res.forEach(x => {
+                    var bj = `<a id="ContentPlaceHolder1_GridView1_HyperLink1_0" class="btn btn-info btn-sm" href="/Cwxx/ShowSave?accout=${x.cwbm}">编辑</a>
+ <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick="if(confirm('确定删除停车信息？')){window.location.href='/Cwxx/DelData?id=${x.cwbm}';}">删除</a> `
+                    htmltext += ` <tr><td>${x.cwbm}</td> <td>${x.cwmc}</td> <td>${x.mxsfy}</td> <td>${x.cwzt}</td><td>${x.zsyh == null ? "" : x.zsyh}</td>
+<td>${x.zsjg == null ? "" : x.zsjg}</td><td>${x.yxsc == null ? "" : x.yxsc}</td><td>${loginUser == "admin"?bj:""}</td></tr>`
+                })
+                $("tbody").html(htmltext)
+            }, error: function (err) {
+                console.log(err)
+                alert("请求异常")
+            }
+        });
+    }
+    
+</script>

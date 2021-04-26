@@ -1,0 +1,135 @@
+﻿@{
+    ViewData["Title"] = "AddUser";
+}
+
+
+<form id="ctl01">
+    <div class="mt-2">
+        <h2>新增车位</h2>
+        <hr>
+    </div>
+    <div class="form-group">
+        <input name="cwbmId" type="hidden" class="form-control" value="@Model.cwbm">
+        <input name="cwzt" type="hidden" class="form-control" value="@Model.cwzt">
+    </div>
+    <div class="form-group">
+        <span id="ContentPlaceHolder1_Label1" for="cwmc">车位名称</span>
+        <input name="cwmc" type="text" class="form-control" value="@Model.cwmc" placeholder="请输入车位名称">
+        <span id="cwmctisi" style="color:Red;display:none;">车位名称不能为空</span>
+    </div>
+    <div class="form-group">
+        <span id="ContentPlaceHolder1_Label3" for="mxsfy">车位价格</span>
+        <input name="mxsfy" type="text" class="form-control" value="@Model.mxsfy" placeholder="请输入车位价格">
+        <span id="mxsfytishi" style="color:Red;display:none;">车位价格不能为空</span>
+    </div>
+    <div class="form-group">
+        <span id="ContentPlaceHolder1_Label3" for="zsyh">专属车主</span>
+        <input name="zsyh" type="text" class="form-control" value="@Model.zsyh" placeholder="请输入专属车主">
+        <span id="zsyhtishi" style="color:Red;display:none;">专属车主不存在</span>
+    </div>
+    <div class="form-group">
+        <span id="ContentPlaceHolder1_Label3" for="zsyh">专属价格</span>
+        <input name="zsjg" type="text" class="form-control" value="@Model.zsjg" placeholder="请输入专属价格">
+        <span id="zsjgtishi" style="color:Red;display:none;">专属价格</span>
+    </div>
+    <div class="form-group">
+        <span id="ContentPlaceHolder1_Label3" for="zsyh">专属到期日期</span>
+        <!--指定 date标记-->
+        <div class='input-group date' id='datetimepicker2' style="width:280px;">
+            <input type='text' class="form-control" name="yxsc" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        <span id="yxsctishi" style="color:Red;display:none;">请输入专属到期日期</span>
+    </div>
+
+    <input type="button" name="ctl00$ContentPlaceHolder1$Button1" value="保存" onclick="WebForm_OnSubmit()" id="ContentPlaceHolder1_Button1" class="btn btn-primary">
+    <a href="/Cwxx/CwxxPlaceV" class="btn btn-light ml-1">返回车位管理</a>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker2').datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: moment.locale('zh-cn')
+            });
+            /*$('#datetimepicker2').datetimepicker({
+                format: 'YYYY-MM-DD hh:mm',
+                locale: moment.locale('zh-cn')
+            });*/
+        });
+
+        function WebForm_OnSubmit() {
+            var cwmc = $("input[name=cwmc]").val().trim()
+            var mxsfy = $("input[name=mxsfy]").val().trim()
+            var zsyh = $("input[name=zsyh]").val().trim()
+            var yxsc = $("input[name=yxsc]").val().trim()
+            var zsjg = $("input[name=zsjg]").val().trim()
+
+            if (cwmc == "") {
+                $("#cwmctisi").css('display', 'block')
+                return
+            } else {
+                $("#yhzhtisi").css('display', 'none')
+            }
+            if (mxsfy == "") {
+                $("#mxsfytishi").css('display', 'block')
+                return
+            } else {
+                $("#mxsfytishi").css('display', 'none')
+            }
+
+            var cwbmId = $("input[name=cwbmId]").val()
+            if (cwbmId == "" || cwbmId == "0") {
+                $.ajax({
+                    type: 'post',
+                    url: "/Cwxx/AddData",
+                    data: { "cwmc": cwmc, "mxsfy": mxsfy, "cwzt": 0, "zsyh": zsyh, "yxsc": yxsc, "zsjg": zsjg },
+                    datatype: 'json',
+                    success: function (res) {
+                        if (res == 1) {
+                            alert("操作成功")
+                            $("input[name=cwmc]").val("")
+                            $("input[name=mxsfy]").val("")
+                            $("input[name=zsyh]").val("")
+                            $("#zsyhtishi").css('display', 'node')
+                        } else {
+                            //$("#zsyhtishi").css('display', 'block')
+                            alert(res.res)
+                        }
+                    }, error: function (err) {
+                        console.log(err)
+                        alert("请求异常")
+                    }
+                });
+
+            } else {
+                var cwzt = $("input[name=cwzt]").val()
+                $.ajax({
+                    type: 'post',
+                    url: "/Cwxx/UpdateData",
+                    data: { "cwmc": cwmc, "mxsfy": mxsfy, "cwzt": cwzt, "cwbm": cwbmId, "zsyh": zsyh, "yxsc": yxsc, "zsjg": zsjg  },
+                    datatype: 'json',
+                    success: function (res) {
+                        console.log(res)
+                        if (res == 1) {
+                            alert("操作成功")
+                            $("#zsyhtishi").css('display', 'node')
+                        } else {
+                            //$("#zsyhtishi").css('display', 'block')
+                            alert(res.res)
+                        }
+                    }, error: function (err) {
+                        console.log(err)
+                        alert("请求异常")
+                    }
+                });
+            }
+
+
+
+        }
+    </script>
+
+</form>

@@ -1,0 +1,148 @@
+﻿@{
+    ViewData["Title"] = "AddUser";
+}
+
+
+<form id="ctl01">
+    <div class="mt-2">
+        <h2>车位停车</h2>
+        <hr>
+    </div>
+    <div class="form-group">
+        <input name="cwbm" type="hidden" class="form-control" value="@Model.cwbm">
+        <input name="tcid" type="hidden" class="form-control" value="@Model.tcid">
+    </div>
+    <div class="form-group">
+        <span id="ContentPlaceHolder1_Label1" for="cwmc">车位名称</span>
+        <input name="cwmc" type="text" class="form-control" value="@Model.cwmc" placeholder="请输入车位名称" readonly="readonly">
+        <span id="cwmctisi" style="color:Red;display:none;">车位名称不能为空</span>
+    </div>
+    <div class="form-group">
+        <span id="ContentPlaceHolder1_Label3" for="mxsfy">每小时收费</span>
+        <input name="mxsfy" type="text" class="form-control" value="@Model.mxsfy" placeholder="请输入车位价格" readonly="readonly">
+        <span id="mxsfytishi" style="color:Red;display:none;">车位价格不能为空</span>
+    </div>
+    @if (Model.clxh == null)
+    {
+        <div class="form-group">
+            <span for="clxh">车型</span>
+            <select name="clxh" id="clxh" class="form-control">
+                <option value="">请选择车型</option>
+                <option value="小型车">小型车</option>
+                <option value="中型车">中型车</option>
+                <option value="大型车">大型车</option>
+            </select>
+            <span id="clxhtishi" style="color:Red;display:none;">车型类别不能为空</span>
+        </div>
+        <div class="form-group">
+            <span id="ContentPlaceHolder1_Label3" for="clbm">车牌号</span>
+            <input name="clbm" type="text" class="form-control" value="@Model.clbm" placeholder="请输入车牌号">
+            <span id="clbmtishi" style="color:Red;display:none;">车牌号不能为空</span>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <span for="clxh">车型</span>
+            <input name="clbm" type="text" class="form-control" value="@Model.clxh" readonly="readonly" id="clxh">
+            <span id="clxhtishi" style="color:Red;display:none;">车型类别不能为空</span>
+        </div>
+        <div class="form-group">
+            <span id="ContentPlaceHolder1_Label3" for="clbm">车牌号</span>
+            <input name="clbm" type="text" class="form-control" value="@Model.clbm" placeholder="请输入车牌号" readonly="readonly">
+            <span id="clbmtishi" style="color:Red;display:none;">车牌号不能为空</span>
+        </div>
+
+        <div class="form-group">
+            <span id="ContentPlaceHolder1_Label3" for="clbm">车费</span>
+            <input name="tcfy" type="text" class="form-control" value="@Model.tcfy" readonly="readonly">
+            <span id="tcfytishi" style="color:Red;display:none;">车费</span>
+        </div>
+    }
+
+    @if (Model.tcid == 0)
+    {
+        <input type="button" value="停车" onclick="WebForm_OnSubmit(1)" id="ContentPlaceHolder1_Button1" class="btn btn-primary">
+    }
+    else
+    {
+        <input type="button" value="结束停车" onclick="WebForm_OnSubmit(2)" id="ContentPlaceHolder1_Button1" class="btn btn-primary">
+    }
+    <a href="/Tcxx/TcxxPlaceV" class="btn btn-light ml-1">返回停车管理</a>
+
+    <script type="text/javascript">
+        function WebForm_OnSubmit(type) {
+            var cwbm = $("input[name=cwbm]").val().trim()
+            var tcid = $("input[name=tcid]").val().trim()
+            var clxh = $("#clxh").val().trim()
+            var clbm = $("input[name=clbm]").val().trim()
+            if (cwbm == "") {
+                $("#cwbmtisi").css('display', 'block')
+                return
+            } else {
+                $("#cwbmtisi").css('display', 'none')
+            }
+            if (tcid == "") {
+                $("#tcidtishi").css('display', 'block')
+                return
+            } else {
+                $("#tcidtishi").css('display', 'none')
+            }
+            if (clxh == "") {
+                $("#clxhtishi").css('display', 'block')
+                return
+            } else {
+                $("#clxhtishi").css('display', 'none')
+            }
+            if (clbm == "") {
+                $("#clbmtishi").css('display', 'block')
+                return
+            } else {
+                $("#clbmtishi").css('display', 'none')
+            }
+
+            var cwbmId = $("input[name=cwbm]").val()
+            if (type == 1) {
+                $.ajax({
+                    type: 'post',
+                    url: "/Tcxx/AddTcxx",
+                    data: { "cwxx_bm": cwbmId, "clbm": clbm, "clxh": clxh },
+                    datatype: 'json',
+                    success: function (res) {
+                        if (res == 1) {
+                            alert("操作成功")
+                            window.location.href = "/Tcxx/TcxxPlaceV"
+                        } else {
+                            alert(res.res)
+                        }
+                    }, error: function (err) {
+                        console.log(err)
+                        alert("请求异常")
+                    }
+                });
+
+            } else {
+                $.ajax({
+                    type: 'post',
+                    url: "/Tcxx/UpdateTcxx",
+                    data: { "cwbm": cwbm, "tcid": tcid },
+                    datatype: 'json',
+                    success: function (res) {
+                        console.log(res)
+                        if (res == 1) {
+                            alert("操作成功")
+                            window.location.href = "/Tcxx/TcxxPlaceV"
+                        }
+                    }, error: function (err) {
+                        console.log(err)
+                        alert("请求异常")
+                    }
+                });
+            }
+
+
+
+        }
+    </script>
+
+</form>
